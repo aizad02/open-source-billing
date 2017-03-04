@@ -61,15 +61,33 @@ class InvoicesController < ApplicationController
     respond_to do |format|
       format.pdf do
         file_name = "Invoice-#{Date.today.to_s}.pdf"
-        pdf = render_to_string  pdf: "#{@invoice.invoice_number}",
-          layout: 'pdf_mode.html.erb',
-          encoding: "UTF-8",
-          template: 'invoices/invoice_pdf.html.erb',
-          footer:{
-            right: 'Page [page] of [topage]'
-          }
-        send_data pdf, filename: file_name
+        render  pdf: "#{@invoice.invoice_number}",
+                layout: 'pdf_mode.html.erb',
+                encoding: "UTF-8",
+                template: 'invoices/invoice_pdf.html.erb',
+                show_as_html: params.key?('debug'),
+                orientation:                    'Portrait',
+                page_size:                      'A4',
+                disable_smart_shrinking:        true,
+                dpi:                            '250',
+                outline: {   outline:           false,
+                             outline_depth:     30 },
+                footer:{
+                  right: 'Page [page] of [topage]'
+                }
       end
+      format.html do
+        render_to_string  layout: 'pdf_mode.html.erb',
+                          encoding: "UTF-8",
+                          template: 'invoices/invoice_pdf.html.erb',
+                          orientation:                    'Portrait',
+                          page_size:                      'A4',
+                          disable_smart_shrinking:        true,
+                          # zoom:                           ,
+                          disposition:                    'attachment',
+                          dpi:                            '500'
+      end
+      
     end
   end
 
@@ -117,6 +135,9 @@ class InvoicesController < ApplicationController
       if @invoice.save
         @invoice.notify(current_user, @invoice.id)  if params[:commit].present?
         new_invoice_message = new_invoice(@invoice.id, params[:save_as_draft])
+        
+        generate_physical_pdf
+        
         redirect_to(edit_invoice_url(@invoice), :notice => new_invoice_message)
         return
       else
@@ -150,6 +171,9 @@ class InvoicesController < ApplicationController
       elsif @invoice.update_attributes(invoice_params)
         @invoice.update_line_item_taxes()
         @invoice.notify(current_user, @invoice.id) if params[:commit].present?
+          
+        generate_physical_pdf
+        
         format.json { head :no_content }
         redirect_to({:action => "edit", :controller => "invoices", :id => @invoice.id}, :notice => 'Your Invoice has been updated successfully.')
         return
@@ -159,7 +183,22 @@ class InvoicesController < ApplicationController
       end
     end
   end
-
+  
+  def generate_physical_pdf
+    # Generate pdf file
+    params[:id] = @invoice.encrypted_id
+    params[:to_save] = true
+    pdf_string = invoice_pdf
+    pdf = WickedPdf.new.pdf_from_string(pdf_string)
+    # pdf = WickedPdf.new.pdf_from_url("en/invoices/invoice_pdf/#{params[:id]}")
+    # pdf = WickedPdf.new.pdf_from_html_file("en/invoices/invoice_pdf/#{params[:id]}")
+    # then save to a file
+    save_path = Rails.root.join('public/pdfs',"#{@invoice.id}.pdf")
+    File.open(save_path, 'wb') do |file|
+      file << pdf
+    end
+    # End generate pdf file
+  end
 
   def send_note_only
     @invoice = Invoice.find(params[:inv_id])

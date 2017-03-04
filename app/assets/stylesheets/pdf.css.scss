@@ -16,7 +16,7 @@
     margin: auto;
     width: 100%;
     border: 1px solid #d7d7d7;
-    overflow: hidden;
+    overflow: scroll;
     border-radius: 4px;
     min-height: 90px;
   }
@@ -71,7 +71,7 @@
     }
     .preview_top_right, pr{
       float: right;
-      width: 40%;
+      width: 38%;
       padding: 5px 0 0 0;
       .company_logo{
         float: right;
@@ -290,7 +290,7 @@
     }
     .preview_top_right, pr{
       float: right;
-      width: 40%;
+      width: 38%;
       padding: 5px 0 0 0;
       .company_logo{
         float: right;

@@ -19,13 +19,27 @@
 # along with Open Source Billing.  If not, see <http://www.gnu.org/licenses/>.
 #
 class InvoiceMailer < ActionMailer::Base
-  default :from => 'info@osb.com'
+  default :from => 'help@doterly.com'
   @@response_to_client = ''
   @@reason_by_client =  ''
   def new_invoice_email(client, invoice, e_id , current_user)
     template = replace_template_body(current_user, invoice, 'New Invoice') #(logged in user,invoice,email type)
     @email_html_body = template.body
+    attachments["#{invoice.invoice_number}.pdf"] = File.read(Rails.root.join('public/pdfs',"#{invoice.id}.pdf"))
+    encrypted_id = invoice.encrypted_id
+    # attachments["#{invoice.invoice_number}.pdf"] = WickedPdf.new.pdf_from_string(
+            # render_to_string(:pdf => 'invoice_pdf')
+          # )
+    
     email_body = mail(:to => client.email, :subject => template.subject).body.to_s
+    # mail(:to => client.email, :subject => template.subject) do |format|
+#         format.text # renders send_report.text.erb for body of email
+#         format.pdf do
+#           attachments["#{invoice.invoice_number}.pdf"] = WickedPdf.new.pdf_from_string(
+#                   render_to_string(:pdf => 'invoice_pdf')
+#                 )
+#         end
+#       end
     invoice.sent_emails.create({
                                    :content => email_body,
                                    :sender => current_user.email, #User email
@@ -113,7 +127,7 @@ class InvoiceMailer < ActionMailer::Base
   def replace_template_body(user = nil, invoice, template_type)
     template = get_email_template(user, invoice, template_type)
     param_values = {
-        'sender_business_name' => 'OSB LLC',
+        'sender_business_name' => 'LightGear Lab',
         'client_contact'=> (invoice.client.first_name rescue 'ERROR'),
         'currency_symbol' => (invoice.currency_symbol  rescue 'ERROR'),
         'invoice_total' => (invoice.invoice_total.to_s  rescue 'ERROR'),

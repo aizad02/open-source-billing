@@ -31,8 +31,7 @@
 
     <div class="preview_top_right">
       <% unless @invoice.company.logo_url.blank? %>
-
-          <div class="company_logo"><%= request.format.pdf? ? (wicked_pdf_image_tag  @invoice.company.logo_url(:thumb)) : (image_tag @invoice.company.logo_url(:thumb)) %></div>
+          <div class="company_logo"><%= request.format.pdf? ? (params.key?('debug') ? (image_tag(@invoice.company.logo_url(:thumb))) : (wicked_pdf_image_tag @invoice.company.logo_url(:thumb))) : (params.key?('to_save').blank? ? (image_tag(@invoice.company.logo_url(:thumb))) : (wicked_pdf_image_tag @invoice.company.logo_url(:thumb))) %></div>
       <% end %>
       <div class="company_logo"><%= @invoice.company.company_tag_line %></div>
     </div>
@@ -236,9 +235,10 @@
   <!--preview_btm_top-->
   <div class="preview_btm_footer">
     <ul>
-      <li class="footer_txt"><%= t('views.invoices.this_invoice_was_sent_using') %></li>
-      <li><%= request.format.pdf? ? (wicked_pdf_image_tag "payment_logo.png", :size => "74x13", :alt => "") : (image_tag "payment_logo.png", :size => "74x13", :alt => "") %></li>
+      
     </ul>
+	<%#= params.key?('debug') ? image_tag('foo') : wicked_pdf_image_tag('foo') %>
+	
   </div>
   <!--preview_btm_footer-->
 </div>

@@ -308,5 +308,6 @@ Osb::Application.routes.draw do
     # Note: This route will make all actions in every controller accessible via GET requests.
 
     get ':controller(/:action(/:id))(.:format)'
+    match "/delayed_job" => DelayedJobWeb, :anchor => false, via: [:get, :post]
   end  
 end
