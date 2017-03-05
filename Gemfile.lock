@@ -71,6 +71,8 @@ GEM
       tzinfo (~> 1.1)
     acts_as_archival (1.1.1)
       activerecord
+    airbrussh (1.1.2)
+      sshkit (>= 1.6.1, != 1.7.0)
     arel (5.0.1.20140414130214)
     awesome_print (1.7.0)
     axiom-types (0.1.1)
@@ -89,6 +91,24 @@ GEM
     browser (2.1.0)
     builder (3.2.2)
     cancancan (1.15.0)
+    capistrano (3.7.2)
+      airbrussh (>= 1.0.0)
+      capistrano-harrow
+      i18n
+      rake (>= 10.0.0)
+      sshkit (>= 1.9.0)
+    capistrano-bundler (1.2.0)
+      capistrano (~> 3.1)
+      sshkit (~> 1.2)
+    capistrano-harrow (0.5.3)
+    capistrano-puma (0.2.3)
+      capistrano (>= 3.0)
+    capistrano-rails (1.2.3)
+      capistrano (~> 3.1)
+      capistrano-bundler (~> 1.1)
+    capistrano-rvm (0.1.2)
+      capistrano (~> 3.0)
+      sshkit (~> 1.2)
     carrierwave (0.11.2)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
@@ -217,6 +237,9 @@ GEM
     mysql (2.9.1)
     mysql2 (0.3.20)
     nested_form (0.3.2)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
+    net-ssh (4.1.0)
     netrc (0.11.0)
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
@@ -239,6 +262,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    puma (3.7.1)
     pygments.rb (0.6.3)
       posix-spawn (~> 0.3.6)
       yajl-ruby (~> 1.2.0)
@@ -348,6 +372,9 @@ GEM
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
     sqlite3 (1.3.13)
+    sshkit (1.12.0)
+      net-scp (>= 1.1.2)
+      net-ssh (>= 2.8.0)
     temple (0.7.7)
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
@@ -402,6 +429,11 @@ DEPENDENCIES
   binding_of_caller (>= 0.6.9)
   browser (= 2.1.0)
   cancancan (= 1.15.0)
+  capistrano
+  capistrano-bundler
+  capistrano-puma
+  capistrano-rails
+  capistrano-rvm
   carrierwave (= 0.11.2)
   coffee-rails (= 4.1.1)
   copyright-header (= 1.0.15)
@@ -431,6 +463,7 @@ DEPENDENCIES
   paranoia (= 2.1.5)
   paypal-sdk-rest (= 1.4.6)
   pry (= 0.10.3)
+  puma
   quickbooks-ruby (= 0.4.4)
   quiet_assets (= 1.1.0)
   rails (~> 4.1.8)

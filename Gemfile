@@ -49,6 +49,15 @@ group :development do
   gem 'awesome_print', '1.7.0'
   gem 'quiet_assets', '1.1.0'
   gem 'copyright-header', '1.0.15'
+  # Deploy with Capistrano
+  gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-puma', require: false
+  # gem 'capistrano-ext'
+  # gem 'capistrano-git-submodule-strategy'
+  # gem 'capistrano-passenger'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rvm'
 end
 gem 'browser', '2.1.0'
 gem 'gon', '6.0.1'
@@ -93,13 +102,10 @@ gem 'quickbooks-ruby', '0.4.4'
 
 # Use unicorn as the app server
 # gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
 # To use debugger
 # gem 'debugger'
 
+gem 'puma'
 gem 'ruby-freshbooks', '0.4.1'
 gem 'cancancan', '1.15.0'
 gem 'rolify', '5.1.0'
